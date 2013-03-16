@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jc.pong.Paddle;
 
-public class GameScreen implements Screen {
+public class GameLoop implements Screen {
 
   //---------------------------------------------------------------------------
   // Variables - Private
@@ -23,7 +23,7 @@ public class GameScreen implements Screen {
   // Constructor
   //---------------------------------------------------------------------------
 
-  public GameScreen(float width, float height) {
+  public GameLoop(float width, float height) {
     camera = new OrthographicCamera();
     camera.setToOrtho(false, width, height);
 
@@ -70,7 +70,6 @@ public class GameScreen implements Screen {
   public void dispose () {
   }
 
-
   //---------------------------------------------------------------------------
   // Methods - Private
   //---------------------------------------------------------------------------
@@ -85,7 +84,6 @@ public class GameScreen implements Screen {
     player1.render(shapeRenderer);
     player2.render(shapeRenderer);
   }
-
 
   public void update(float delta) {
 
