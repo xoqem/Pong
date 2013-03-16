@@ -33,7 +33,6 @@ public class Paddle {
     move(0, 0);
   }
 
-
   //---------------------------------------------------------------------------
   // Properties - Public
   //---------------------------------------------------------------------------
@@ -46,7 +45,6 @@ public class Paddle {
   public float getY() {
     return y;
   }
-
 
   //---------------------------------------------------------------------------
   // Methods - Public
@@ -61,7 +59,6 @@ public class Paddle {
     x = newX;
     y = newY;
   }
-
 
   public void render(ShapeRenderer shapeRenderer) {
     shapeRenderer.begin(ShapeRenderer.ShapeType.FilledRectangle);
