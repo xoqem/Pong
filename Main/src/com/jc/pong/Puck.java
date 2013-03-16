@@ -4,34 +4,28 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-public class Paddle {
+public class Puck {
 
   //---------------------------------------------------------------------------
   // Variables - Private
   //---------------------------------------------------------------------------
 
-  float width = 20;
-  float height = 100;
+  float gravity = 9.8f; // gravity
+  float friction = 0.15f; // coefficient of friction for a puck on ice
+  float friction_gravity = friction * gravity; // pre-calculate
+
+  float radius = 10f;
 
   float x;
   float y;
-
-  float minX;
-  float minY;
-  float maxX;
-  float maxY;
+  float vx;
+  float vy;
 
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
-  public Paddle(float minX, float minY, float maxX, float maxY) {
-    this.minX = minX;
-    this.minY = minY;
-    this.maxX = maxX;
-    this.maxY = maxY;
-
-    move(0, 0);
+  public Puck() {
   }
 
   //---------------------------------------------------------------------------
@@ -42,7 +36,6 @@ public class Paddle {
     return x;
   }
 
-
   public float getY() {
     return y;
   }
@@ -51,20 +44,42 @@ public class Paddle {
   // Methods - Public
   //---------------------------------------------------------------------------
 
-  public void move(float newX, float newY) {
-    newX = Math.max(newX, minX);
-    newX = Math.min(newX, maxX);
-    newY = Math.max(newY, minY + height / 2);
-    newY = Math.min(newY, maxY - height / 2);
+  public void move(float x, float y)
+  {
+    this.x = x;
+    this.y = y;
+  }
 
-    x = newX;
-    y = newY;
+  public void setVelocity(float vx, float vy) {
+    this.vx = vx;
+    this.vy = vy;
+  }
+
+  public void simulate(float delta) {
+    vx = getNewVelocity(vx, -friction_gravity, delta);
+    vy = getNewVelocity(vy, -friction_gravity, delta);
+
+    x = x + vx;
+    y = y + vy;
   }
 
   public void render(ShapeRenderer shapeRenderer) {
-    shapeRenderer.begin(ShapeType.FilledRectangle);
+    shapeRenderer.begin(ShapeType.FilledCircle);
     shapeRenderer.setColor(new Color(1, 1, 1, 1));
-    shapeRenderer.filledRect(x - width / 2, y - height / 2, width, height);
+    shapeRenderer.filledCircle(x, y, radius);
     shapeRenderer.end();
+  }
+
+  //---------------------------------------------------------------------------
+  // Methods - Private
+  //---------------------------------------------------------------------------
+
+  private float getNewVelocity(float velocity, float acceleration, float time) {
+    float changeInVelocity = acceleration * time;
+    if (Math.abs(velocity) - Math.abs(changeInVelocity) < 0) {
+      return 0;
+    } else {
+      return velocity + acceleration * time;
+    }
   }
 }

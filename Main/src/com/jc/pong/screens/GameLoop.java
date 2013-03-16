@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jc.pong.Paddle;
+import com.jc.pong.Puck;
 
 public class GameLoop implements Screen {
 
@@ -25,6 +26,7 @@ public class GameLoop implements Screen {
 
   Paddle player1;
   Paddle player2;
+  Puck puck;
 
   //---------------------------------------------------------------------------
   // Constructor
@@ -41,6 +43,10 @@ public class GameLoop implements Screen {
 
     player2 = new Paddle(width - 30, 0, width - 30, height);
     player2.move(player2.getY(), height / 2);
+
+    puck = new Puck();
+    puck.move(width / 2, height / 2);
+    puck.setVelocity(3, 3);
   }
 
   //---------------------------------------------------------------------------
@@ -90,10 +96,11 @@ public class GameLoop implements Screen {
 
     player1.render(shapeRenderer);
     player2.render(shapeRenderer);
+
+    puck.render(shapeRenderer);
   }
 
   public void update(float delta) {
-
     float timeScale = delta / IDEAL_DELTA;
 
     if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
@@ -104,5 +111,7 @@ public class GameLoop implements Screen {
       player1.move(player1.getX(), player1.getY() - 10 * timeScale);
       player2.move(player2.getX(), player2.getY() - 10 * timeScale);
     }
+
+    puck.simulate(delta);
   }
 }
