@@ -24,7 +24,7 @@ public class Paddle {
   // Constructor
   //---------------------------------------------------------------------------
 
-  Paddle(float minX, float minY, float maxX, float maxY) {
+  public Paddle(float minX, float minY, float maxX, float maxY) {
     this.minX = minX;
     this.minY = minY;
     this.maxX = maxX;
