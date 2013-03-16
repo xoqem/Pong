@@ -1,6 +1,7 @@
 package com.jc.pong.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,6 +9,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.jc.pong.Paddle;
 
 public class GameLoop implements Screen {
+
+  //---------------------------------------------------------------------------
+  // Finals - Static - Private
+  //---------------------------------------------------------------------------
+
+  final static float IDEAL_DELTA = 1f/ 60f; // 1 second / 60 fps: this is our ideal delta given our ideal fps
 
   //---------------------------------------------------------------------------
   // Variables - Private
@@ -87,5 +94,15 @@ public class GameLoop implements Screen {
 
   public void update(float delta) {
 
+    float timeScale = delta / IDEAL_DELTA;
+
+    if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
+      player1.move(player1.getX(), player1.getY() + 10 * timeScale);
+      player2.move(player2.getX(), player2.getY() + 10 * timeScale);
+    }
+    if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
+      player1.move(player1.getX(), player1.getY() - 10 * timeScale);
+      player2.move(player2.getX(), player2.getY() - 10 * timeScale);
+    }
   }
 }
