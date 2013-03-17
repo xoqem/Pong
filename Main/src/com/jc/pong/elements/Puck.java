@@ -16,7 +16,7 @@ public class Puck {
   // Constructor
   //---------------------------------------------------------------------------
 
-  public Puck(World world, Vector2 position) {
+  public Puck(World world, Vector2 position, float radius) {
     // First we create a body definition
     BodyDef bodyDef = new BodyDef();
     // We set our body to dynamic, for something like ground which doesnt move we would set it to StaticBody
@@ -29,7 +29,7 @@ public class Puck {
 
     // Create a circle shape and set its radius to 6
     CircleShape circle = new CircleShape();
-    circle.setRadius(10f);
+    circle.setRadius(radius);
 
     // Create a fixture definition to apply our shape to
     FixtureDef fixtureDef = new FixtureDef();

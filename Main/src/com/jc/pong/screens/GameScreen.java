@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
@@ -30,6 +31,7 @@ public class GameScreen implements Screen {
 
   World world;
   Box2DDebugRenderer debugRenderer;
+  Matrix4 debugMatrix;
 
   OrthographicCamera camera;
   ShapeRenderer shapeRenderer;
@@ -49,11 +51,14 @@ public class GameScreen implements Screen {
     camera = new OrthographicCamera();
     camera.setToOrtho(false, width, height);
 
+    debugMatrix = new Matrix4(camera.combined);
+    debugMatrix.scale(BOX_TO_WORLD, BOX_TO_WORLD, 1f);
+
     shapeRenderer = new ShapeRenderer();
 
-    player1 = new Paddle(world, new Vector2(30, height / 2));
-    player2 = new Paddle(world, new Vector2(width - 30, height / 2));
-    puck = new Puck(world, new Vector2(width / 2, height / 2));
+    player1 = new Paddle(world, createBoxVector(30f, height / 2f), createBoxVector(10f, 50f));
+    player2 = new Paddle(world, createBoxVector(width - 30f, height / 2f), createBoxVector(10f, 50f));
+    puck = new Puck(world, createBoxVector(width / 2f, height / 2f), createBoxDistance(10f));
   }
 
   //---------------------------------------------------------------------------
@@ -91,7 +96,7 @@ public class GameScreen implements Screen {
   }
 
   //---------------------------------------------------------------------------
-  // Methods - Private
+  // Methods - Public
   //---------------------------------------------------------------------------
 
   public void draw(float delta) {
@@ -100,7 +105,7 @@ public class GameScreen implements Screen {
 
     camera.update();
 
-    debugRenderer.render(world, camera.combined);
+    debugRenderer.render(world, debugMatrix);
   }
 
   public void update(float delta) {
@@ -108,11 +113,24 @@ public class GameScreen implements Screen {
 
     float paddleSpeed = 0f;
     if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
-      paddleSpeed = 100f;
+      paddleSpeed = createBoxDistance(1000f);
     }
     else if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-      paddleSpeed = -100f;
+      paddleSpeed = createBoxDistance(-1000f);
     }
     player1.getBody().setLinearVelocity(0f, paddleSpeed);
+  }
+
+  //---------------------------------------------------------------------------
+  // Methods - Private
+  //---------------------------------------------------------------------------
+
+  private Vector2 createBoxVector(float x, float y) {
+    return new Vector2(x, y).mul(WORLD_TO_BOX);
+  }
+
+
+  private float createBoxDistance(float dist) {
+    return dist * WORLD_TO_BOX;
   }
 }

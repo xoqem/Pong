@@ -16,7 +16,7 @@ public class Paddle {
   // Constructor
   //---------------------------------------------------------------------------
 
-  public Paddle(World world, Vector2 position) {
+  public Paddle(World world, Vector2 position, Vector2 size) {
     // First we create a body definition
     BodyDef bodyDef = new BodyDef();
     // We set our body to dynamic, for something like ground which doesnt move we would set it to StaticBody
@@ -29,7 +29,7 @@ public class Paddle {
 
     // Create a circle shape and set its radius to 6
     PolygonShape rect = new PolygonShape();
-    rect.setAsBox(10, 50);
+    rect.setAsBox(size.x, size.y);
 
     // Create a fixture definition to apply our shape to
     FixtureDef fixtureDef = new FixtureDef();
