@@ -4,8 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-public class Paddle {
-
+public class Wall {
   //---------------------------------------------------------------------------
   // Variables - Private
   //---------------------------------------------------------------------------
@@ -16,9 +15,12 @@ public class Paddle {
   // Constructor
   //---------------------------------------------------------------------------
 
-  public Paddle(World world, Vector2 position, Vector2 size) {
+  public Wall(World world, Vector2 min, Vector2 max) {
+    Vector2 size = max.cpy().sub(min);
+    Vector2 position = min.cpy().add(size.cpy().div(2f));
+
     BodyDef bodyDef = new BodyDef();
-    bodyDef.type = BodyType.DynamicBody;
+    bodyDef.type = BodyType.StaticBody;
     bodyDef.position.set(position);
 
     body = world.createBody(bodyDef);
@@ -28,9 +30,9 @@ public class Paddle {
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = rect;
-    fixtureDef.density = 0.5f;
+    fixtureDef.density = 1f;
     fixtureDef.friction = 0f;
-    fixtureDef.restitution = 0f;
+    fixtureDef.restitution = 0.6f;
 
     body.createFixture(fixtureDef);
 

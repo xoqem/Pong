@@ -12,6 +12,10 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.jc.pong.elements.Paddle;
 import com.jc.pong.elements.Puck;
+import com.jc.pong.elements.Wall;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class GameScreen implements Screen {
 
@@ -39,6 +43,7 @@ public class GameScreen implements Screen {
   Paddle player1;
   Paddle player2;
   Puck puck;
+  ArrayList walls;
 
   //---------------------------------------------------------------------------
   // Constructor
@@ -56,9 +61,22 @@ public class GameScreen implements Screen {
 
     shapeRenderer = new ShapeRenderer();
 
-    player1 = new Paddle(world, createBoxVector(30f, height / 2f), createBoxVector(10f, 50f));
-    player2 = new Paddle(world, createBoxVector(width - 30f, height / 2f), createBoxVector(10f, 50f));
+    player1 = new Paddle(world, createBoxVector(50f, height / 2f), createBoxVector(20f, 100f));
+    player2 = new Paddle(world, createBoxVector(width - 50f, height / 2f), createBoxVector(20f, 100f));
     puck = new Puck(world, createBoxVector(width / 2f, height / 2f), createBoxDistance(10f));
+
+    float padding = 10f;
+    float thickness = 20f;
+    float goalSize = 200f;
+
+    walls = new ArrayList();
+    walls.add(new Wall(world, createBoxVector(padding, padding), createBoxVector(width - padding, thickness)));
+    walls.add(new Wall(world, createBoxVector(padding, height / 2 - goalSize / 2), createBoxVector(thickness, thickness)));
+    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 - goalSize / 2), createBoxVector(width - thickness, thickness)));
+
+    walls.add(new Wall(world, createBoxVector(padding, height - padding), createBoxVector(width - padding, height - thickness)));
+    walls.add(new Wall(world, createBoxVector(padding, height / 2 + goalSize / 2), createBoxVector(thickness, height - thickness)));
+    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 + goalSize / 2), createBoxVector(width - thickness, height - thickness)));
   }
 
   //---------------------------------------------------------------------------
@@ -119,6 +137,7 @@ public class GameScreen implements Screen {
       paddleSpeed = createBoxDistance(-1000f);
     }
     player1.getBody().setLinearVelocity(0f, paddleSpeed);
+    player2.getBody().setLinearVelocity(0f, paddleSpeed);
   }
 
   //---------------------------------------------------------------------------
