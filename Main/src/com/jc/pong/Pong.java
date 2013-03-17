@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
-import com.jc.pong.screens.GameLoop;
+import com.jc.pong.screens.GameScreen;
 
 public class Pong extends Game{
 
@@ -21,7 +21,7 @@ public class Pong extends Game{
 
   @Override
   public void create() {
-    currentScreen = new GameLoop(800, 480);
+    currentScreen = new GameScreen(800, 480);
     fps = new FPSLogger();
   }
 
