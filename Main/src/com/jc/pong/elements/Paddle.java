@@ -32,7 +32,7 @@ public class Paddle {
     fixtureDef.friction = 0f;
     fixtureDef.restitution = 0.6f;
 
-    Fixture fixture = body.createFixture(fixtureDef);
+    body.createFixture(fixtureDef);
 
     rect.dispose();
   }

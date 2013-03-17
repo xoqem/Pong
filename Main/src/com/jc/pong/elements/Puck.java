@@ -32,7 +32,7 @@ public class Puck {
     fixtureDef.friction = 0.15f;
     fixtureDef.restitution = 0.6f;
 
-    Fixture fixture = body.createFixture(fixtureDef);
+    body.createFixture(fixtureDef);
 
     circle.dispose();
   }
