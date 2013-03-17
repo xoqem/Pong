@@ -6,8 +6,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.jc.pong.Paddle;
-import com.jc.pong.Puck;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.jc.pong.elements.Paddle;
+import com.jc.pong.elements.Puck;
 
 public class GameScreen implements Screen {
 
@@ -15,8 +18,8 @@ public class GameScreen implements Screen {
   // Finals - Static - Private
   //---------------------------------------------------------------------------
 
-  final static float IDEAL_DELTA = 1f/ 60f; // 1 second / 60 fps: this is our ideal delta given our ideal fps
-  final static float GRAVITY = -9.8f;
+  static final float IDEAL_DELTA = 1f/ 60f; // 1 second / 60 fps: this is our ideal delta given our ideal fps
+  static final float GRAVITY = 0;//-9.8f;
 
   static final float WORLD_TO_BOX = 0.01f;
   static final float BOX_TO_WORLD = 100f;
@@ -24,6 +27,9 @@ public class GameScreen implements Screen {
   //---------------------------------------------------------------------------
   // Variables - Private
   //---------------------------------------------------------------------------
+
+  World world;
+  Box2DDebugRenderer debugRenderer;
 
   OrthographicCamera camera;
   ShapeRenderer shapeRenderer;
@@ -37,20 +43,17 @@ public class GameScreen implements Screen {
   //---------------------------------------------------------------------------
 
   public GameScreen(float width, float height) {
+    world = new World(new Vector2(0, GRAVITY), true);
+    debugRenderer = new Box2DDebugRenderer();
+
     camera = new OrthographicCamera();
     camera.setToOrtho(false, width, height);
 
     shapeRenderer = new ShapeRenderer();
 
-    player1 = new Paddle(30, 0, 30, height);
-    player1.move(player1.getX(), height / 2);
-
-    player2 = new Paddle(width - 30, 0, width - 30, height);
-    player2.move(player2.getY(), height / 2);
-
-    puck = new Puck();
-    puck.move(width / 2, height / 2);
-    puck.setVelocity(3, 3);
+    player1 = new Paddle(world, new Vector2(30, height / 2));
+    player2 = new Paddle(world, new Vector2(width - 30, height / 2));
+    puck = new Puck(world, new Vector2(width / 2, height / 2));
   }
 
   //---------------------------------------------------------------------------
@@ -96,26 +99,20 @@ public class GameScreen implements Screen {
     Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
     camera.update();
-    shapeRenderer.setProjectionMatrix(camera.combined);
 
-    player1.render(shapeRenderer);
-    player2.render(shapeRenderer);
-
-    puck.render(shapeRenderer);
+    debugRenderer.render(world, camera.combined);
   }
 
   public void update(float delta) {
-    float timeScale = delta / IDEAL_DELTA;
+    world.step(delta, 6, 2);
 
+    float paddleSpeed = 0f;
     if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
-      player1.move(player1.getX(), player1.getY() + 10 * timeScale);
-      player2.move(player2.getX(), player2.getY() + 10 * timeScale);
+      paddleSpeed = 100f;
     }
-    if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-      player1.move(player1.getX(), player1.getY() - 10 * timeScale);
-      player2.move(player2.getX(), player2.getY() - 10 * timeScale);
+    else if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
+      paddleSpeed = -100f;
     }
-
-    puck.simulate(delta);
+    player1.getBody().setLinearVelocity(0f, paddleSpeed);
   }
 }
