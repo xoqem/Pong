@@ -14,6 +14,7 @@ import com.jc.pong.elements.Paddle;
 import com.jc.pong.elements.Puck;
 import com.jc.pong.elements.Wall;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -23,7 +24,6 @@ public class GameScreen implements Screen {
   // Finals - Static - Private
   //---------------------------------------------------------------------------
 
-  static final float IDEAL_DELTA = 1f/ 60f; // 1 second / 60 fps: this is our ideal delta given our ideal fps
   static final float GRAVITY = 0;//-9.8f;
 
   static final float WORLD_TO_BOX = 0.01f;
@@ -69,15 +69,59 @@ public class GameScreen implements Screen {
     float padding = 10f;
     float thickness = 10f;
     float goalSize = 200f;
+    float endWallLength = (height - goalSize - padding - thickness) / 2;
+    Vector2[] vertices;
 
     walls = new ArrayList();
-    walls.add(new Wall(world, createBoxVector(padding, padding), createBoxVector(width - padding, thickness + padding)));
-    walls.add(new Wall(world, createBoxVector(padding, height / 2 - goalSize / 2), createBoxVector(thickness + padding, thickness + padding)));
-    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 - goalSize / 2), createBoxVector(width - padding - thickness, padding + thickness)));
 
-    walls.add(new Wall(world, createBoxVector(padding, height - padding), createBoxVector(width - padding, height - thickness - padding)));
-    walls.add(new Wall(world, createBoxVector(padding, height / 2 + goalSize / 2), createBoxVector(thickness + padding, height - thickness - padding)));
-    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 + goalSize / 2), createBoxVector(width - thickness - padding, height - thickness - padding)));
+    // bottom wall
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(width - padding * 2f, 0f);
+    vertices[2] = createBoxVector(width - padding * 2f, thickness);
+    vertices[3] = createBoxVector(0f, thickness);
+    walls.add(new Wall(world, createBoxVector(padding, padding), vertices));
+
+    // bottom left wall
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(thickness, 0f);
+    vertices[2] = createBoxVector(thickness, endWallLength);
+    vertices[3] = createBoxVector(0f, endWallLength);
+    walls.add(new Wall(world, createBoxVector(padding, padding), vertices));
+
+    // bottom right wall
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(thickness, 0f);
+    vertices[2] = createBoxVector(thickness, endWallLength);
+    vertices[3] = createBoxVector(0f, endWallLength);
+    walls.add(new Wall(world, createBoxVector(width - padding * 2, padding), vertices));
+
+    // top wall
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(0f, -thickness);
+    vertices[2] = createBoxVector(width - padding * 2f, -thickness);
+    vertices[3] = createBoxVector(width - padding * 2f, 0f);
+    walls.add(new Wall(world, createBoxVector(padding, height - padding), vertices));
+
+    // top left wall
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(0f, -endWallLength);
+    vertices[2] = createBoxVector(thickness, -endWallLength);
+    vertices[3] = createBoxVector(thickness, 0f);
+    walls.add(new Wall(world, createBoxVector(padding, height - padding), vertices));
+
+    // top right wall
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(0f, -endWallLength);
+    vertices[2] = createBoxVector(thickness, -endWallLength);
+    vertices[3] = createBoxVector(thickness, 0f);
+    walls.add(new Wall(world, createBoxVector(width - padding * 2, height - padding), vertices));
+
   }
 
   //---------------------------------------------------------------------------
@@ -128,15 +172,35 @@ public class GameScreen implements Screen {
   }
 
   public void update(float delta) {
-    float paddleSpeed = 0f;
-    if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
-      paddleSpeed = createBoxDistance(1000f);
+    float paddleSpeed = 500f;
+
+    Vector2 paddleVelocity = new Vector2(0f, 0f);
+    if (Gdx.input.isKeyPressed(Keys.W)) {
+      paddleVelocity.y = createBoxDistance(paddleSpeed);
+    } else if (Gdx.input.isKeyPressed(Keys.S)) {
+      paddleVelocity.y = createBoxDistance(-paddleSpeed);
     }
-    else if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN) || Gdx.input.isKeyPressed(Keys.S)) {
-      paddleSpeed = createBoxDistance(-1000f);
+
+    if (Gdx.input.isKeyPressed(Keys.D)) {
+      paddleVelocity.x = createBoxDistance(paddleSpeed);
+    } else if (Gdx.input.isKeyPressed(Keys.A)) {
+      paddleVelocity.x = createBoxDistance(-paddleSpeed);
     }
-    player1.getBody().setLinearVelocity(0f, paddleSpeed);
-    player2.getBody().setLinearVelocity(0f, paddleSpeed);
+    player1.getBody().setLinearVelocity(paddleVelocity);
+
+    paddleVelocity = new Vector2(0f, 0f);
+    if (Gdx.input.isKeyPressed(Keys.DPAD_UP)) {
+      paddleVelocity.y = createBoxDistance(paddleSpeed);
+    } else if (Gdx.input.isKeyPressed(Keys.DPAD_DOWN)) {
+      paddleVelocity.y = createBoxDistance(-paddleSpeed);
+    }
+
+    if (Gdx.input.isKeyPressed(Keys.DPAD_RIGHT)) {
+      paddleVelocity.x = createBoxDistance(paddleSpeed);
+    } else if (Gdx.input.isKeyPressed(Keys.DPAD_LEFT)) {
+      paddleVelocity.x = createBoxDistance(-paddleSpeed);
+    }
+    player2.getBody().setLinearVelocity(paddleVelocity);
 
     world.step(delta, 6, 2);
   }

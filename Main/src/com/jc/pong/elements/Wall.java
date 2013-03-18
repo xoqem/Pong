@@ -15,28 +15,25 @@ public class Wall {
   // Constructor
   //---------------------------------------------------------------------------
 
-  public Wall(World world, Vector2 min, Vector2 max) {
-    Vector2 size = max.cpy().sub(min);
-    Vector2 position = min.cpy().add(size.cpy().div(2f));
-
+  public Wall(World world, Vector2 position, Vector2[] vertices) {
     BodyDef bodyDef = new BodyDef();
     bodyDef.type = BodyType.StaticBody;
     bodyDef.position.set(position);
 
     body = world.createBody(bodyDef);
 
-    PolygonShape rect = new PolygonShape();
-    rect.setAsBox(size.x / 2, size.y / 2);
+    PolygonShape polygon = new PolygonShape();
+    polygon.set(vertices);
 
     FixtureDef fixtureDef = new FixtureDef();
-    fixtureDef.shape = rect;
+    fixtureDef.shape = polygon;
     fixtureDef.density = 0f;
     fixtureDef.friction = 0f;
-    fixtureDef.restitution = 0.6f;
+    fixtureDef.restitution = 0f;
 
     body.createFixture(fixtureDef);
 
-    rect.dispose();
+    polygon.dispose();
   }
 
   //---------------------------------------------------------------------------

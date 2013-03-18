@@ -18,10 +18,11 @@ public class Paddle {
 
   public Paddle(World world, Vector2 position, Vector2 size) {
     BodyDef bodyDef = new BodyDef();
-    bodyDef.type = BodyType.KinematicBody;
+    bodyDef.type = BodyType.DynamicBody;
     bodyDef.position.set(position);
 
     body = world.createBody(bodyDef);
+    body.setFixedRotation(true);
 
     PolygonShape rect = new PolygonShape();
     rect.setAsBox(size.x / 2, size.y / 2);
@@ -30,7 +31,7 @@ public class Paddle {
     fixtureDef.shape = rect;
     fixtureDef.density = 5.0f;
     fixtureDef.friction = 1f;
-    fixtureDef.restitution = 1f;
+    fixtureDef.restitution = 0f;
 
     body.createFixture(fixtureDef);
 
