@@ -64,19 +64,20 @@ public class GameScreen implements Screen {
     player1 = new Paddle(world, createBoxVector(50f, height / 2f), createBoxVector(20f, 100f));
     player2 = new Paddle(world, createBoxVector(width - 50f, height / 2f), createBoxVector(20f, 100f));
     puck = new Puck(world, createBoxVector(width / 2f, height / 2f), createBoxDistance(10f));
+    puck.getBody().setLinearVelocity(createBoxVector(200f, 200f));
 
     float padding = 10f;
-    float thickness = 20f;
+    float thickness = 10f;
     float goalSize = 200f;
 
     walls = new ArrayList();
-    walls.add(new Wall(world, createBoxVector(padding, padding), createBoxVector(width - padding, thickness)));
-    walls.add(new Wall(world, createBoxVector(padding, height / 2 - goalSize / 2), createBoxVector(thickness, thickness)));
-    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 - goalSize / 2), createBoxVector(width - thickness, thickness)));
+    walls.add(new Wall(world, createBoxVector(padding, padding), createBoxVector(width - padding, thickness + padding)));
+    walls.add(new Wall(world, createBoxVector(padding, height / 2 - goalSize / 2), createBoxVector(thickness + padding, thickness + padding)));
+    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 - goalSize / 2), createBoxVector(width - padding - thickness, padding + thickness)));
 
-    walls.add(new Wall(world, createBoxVector(padding, height - padding), createBoxVector(width - padding, height - thickness)));
-    walls.add(new Wall(world, createBoxVector(padding, height / 2 + goalSize / 2), createBoxVector(thickness, height - thickness)));
-    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 + goalSize / 2), createBoxVector(width - thickness, height - thickness)));
+    walls.add(new Wall(world, createBoxVector(padding, height - padding), createBoxVector(width - padding, height - thickness - padding)));
+    walls.add(new Wall(world, createBoxVector(padding, height / 2 + goalSize / 2), createBoxVector(thickness + padding, height - thickness - padding)));
+    walls.add(new Wall(world, createBoxVector(width - padding, height / 2 + goalSize / 2), createBoxVector(width - thickness - padding, height - thickness - padding)));
   }
 
   //---------------------------------------------------------------------------
@@ -127,8 +128,6 @@ public class GameScreen implements Screen {
   }
 
   public void update(float delta) {
-    world.step(delta, 6, 2);
-
     float paddleSpeed = 0f;
     if (Gdx.input.isKeyPressed(Keys.DPAD_UP) || Gdx.input.isKeyPressed(Keys.W)) {
       paddleSpeed = createBoxDistance(1000f);
@@ -138,6 +137,8 @@ public class GameScreen implements Screen {
     }
     player1.getBody().setLinearVelocity(0f, paddleSpeed);
     player2.getBody().setLinearVelocity(0f, paddleSpeed);
+
+    world.step(delta, 6, 2);
   }
 
   //---------------------------------------------------------------------------

@@ -18,7 +18,7 @@ public class Paddle {
 
   public Paddle(World world, Vector2 position, Vector2 size) {
     BodyDef bodyDef = new BodyDef();
-    bodyDef.type = BodyType.DynamicBody;
+    bodyDef.type = BodyType.KinematicBody;
     bodyDef.position.set(position);
 
     body = world.createBody(bodyDef);
@@ -28,9 +28,9 @@ public class Paddle {
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = rect;
-    fixtureDef.density = 0.5f;
-    fixtureDef.friction = 0f;
-    fixtureDef.restitution = 0f;
+    fixtureDef.density = 5.0f;
+    fixtureDef.friction = 1f;
+    fixtureDef.restitution = 1f;
 
     body.createFixture(fixtureDef);
 

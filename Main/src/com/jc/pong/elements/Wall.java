@@ -30,7 +30,7 @@ public class Wall {
 
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.shape = rect;
-    fixtureDef.density = 1f;
+    fixtureDef.density = 0f;
     fixtureDef.friction = 0f;
     fixtureDef.restitution = 0.6f;
 
