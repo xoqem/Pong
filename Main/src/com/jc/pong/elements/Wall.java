@@ -40,8 +40,7 @@ public class Wall {
   // Properties - Public
   //---------------------------------------------------------------------------
 
-  public Body getBody()
-  {
+  public Body getBody() {
     return body;
   }
 }

@@ -30,8 +30,7 @@ public class Entity {
   // Properties - Public
   //---------------------------------------------------------------------------
 
-  public Body getBody()
-  {
+  public Body getBody() {
     return body;
   }
 
@@ -39,8 +38,7 @@ public class Entity {
   // Methods - Public
   //---------------------------------------------------------------------------
 
-  public void reset()
-  {
+  public void reset() {
     Body body = getBody();
     body.setLinearVelocity(0, 0);
     body.setAngularVelocity(0);
