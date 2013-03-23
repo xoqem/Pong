@@ -2,26 +2,17 @@ package com.jc.pong.elements;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-public class Paddle {
-
-  //---------------------------------------------------------------------------
-  // Variables - Private
-  //---------------------------------------------------------------------------
-
-  Body body;
+public class Paddle extends Entity {
 
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
   public Paddle(World world, Vector2 position, Vector2 size) {
-    BodyDef bodyDef = new BodyDef();
-    bodyDef.type = BodyType.DynamicBody;
-    bodyDef.position.set(position);
+    super(world, position);
 
-    body = world.createBody(bodyDef);
+    Body body = getBody();
     body.setFixedRotation(true);
 
     PolygonShape rect = new PolygonShape();
@@ -36,14 +27,5 @@ public class Paddle {
     body.createFixture(fixtureDef);
 
     rect.dispose();
-  }
-
-  //---------------------------------------------------------------------------
-  // Properties - Public
-  //---------------------------------------------------------------------------
-
-  public Body getBody()
-  {
-    return body;
   }
 }

@@ -45,11 +45,17 @@ public class GameScreen implements Screen {
   Puck puck;
   ArrayList walls;
 
+  float width;
+  float height;
+
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
   public GameScreen(float width, float height) {
+    this.width = width;
+    this.height = height;
+
     world = new World(new Vector2(0, GRAVITY), true);
     debugRenderer = new Box2DDebugRenderer();
 
@@ -171,6 +177,12 @@ public class GameScreen implements Screen {
     debugRenderer.render(world, debugMatrix);
   }
 
+  public void reset() {
+    player1.reset();
+    player2.reset();
+    puck.reset();
+  }
+
   public void update(float delta) {
     float paddleSpeed = 500f;
 
@@ -201,6 +213,10 @@ public class GameScreen implements Screen {
       paddleVelocity.x = createBoxDistance(-paddleSpeed);
     }
     player2.getBody().setLinearVelocity(paddleVelocity);
+
+    if (Gdx.input.isKeyPressed(Keys.R)) {
+      reset();
+    }
 
     world.step(delta, 6, 2);
   }
