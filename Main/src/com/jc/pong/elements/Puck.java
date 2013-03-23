@@ -7,23 +7,37 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 public class Puck extends Entity {
 
   //---------------------------------------------------------------------------
+  // Variables - Private
+  //--------------------------------------------------------------------------
+
+  float radius;
+
+  //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
   public Puck(World world, Vector2 position, float radius) {
-    super(world, position);
+    super(world, position, BodyType.DynamicBody);
 
-    CircleShape circle = new CircleShape();
-    circle.setRadius(radius);
+    this.radius = radius;
+    createBody();
+  }
 
+  //---------------------------------------------------------------------------
+  // Methods - Entity Implementation
+  //---------------------------------------------------------------------------
+
+  public FixtureDef createFixtureDef() {
     FixtureDef fixtureDef = new FixtureDef();
-    fixtureDef.shape = circle;
     fixtureDef.density = 0.5f;
     fixtureDef.friction = 0.15f;
     fixtureDef.restitution = 0.6f;
+    return fixtureDef;
+  }
 
-    getBody().createFixture(fixtureDef);
-
-    circle.dispose();
+  public Shape createShape() {
+    CircleShape circle = new CircleShape();
+    circle.setRadius(radius);
+    return circle;
   }
 }
