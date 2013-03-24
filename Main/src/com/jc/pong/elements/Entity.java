@@ -34,12 +34,12 @@ public abstract class Entity {
   }
 
   //---------------------------------------------------------------------------
-  // Methods - Abstract - Public
+  // Methods - Abstract - Protected
   //---------------------------------------------------------------------------
 
-  public abstract FixtureDef createFixtureDef();
+  protected abstract FixtureDef createFixtureDef();
 
-  public abstract Shape createShape();
+  protected abstract Shape createShape();
 
   //---------------------------------------------------------------------------
   // Methods - Public
@@ -55,7 +55,7 @@ public abstract class Entity {
   }
 
   //---------------------------------------------------------------------------
-  // Methods - protected
+  // Methods - Protected
   //---------------------------------------------------------------------------
 
   protected void createBody() {

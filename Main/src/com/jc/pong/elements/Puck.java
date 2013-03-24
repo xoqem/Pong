@@ -27,7 +27,7 @@ public class Puck extends Entity {
   // Methods - Entity Implementation
   //---------------------------------------------------------------------------
 
-  public FixtureDef createFixtureDef() {
+  protected FixtureDef createFixtureDef() {
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.density = 0.5f;
     fixtureDef.friction = 0.15f;
@@ -35,7 +35,7 @@ public class Puck extends Entity {
     return fixtureDef;
   }
 
-  public Shape createShape() {
+  protected Shape createShape() {
     CircleShape circle = new CircleShape();
     circle.setRadius(radius);
     return circle;

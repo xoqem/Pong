@@ -12,7 +12,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.jc.pong.elements.Paddle;
 import com.jc.pong.elements.Puck;
+import com.jc.pong.elements.Sensor;
 import com.jc.pong.elements.StaticPolygon;
+import com.jc.pong.listeners.GameContactListener;
 
 import java.util.ArrayList;
 
@@ -37,9 +39,12 @@ public class GameScreen implements Screen {
 
   OrthographicCamera camera;
   ShapeRenderer shapeRenderer;
+  GameContactListener contactListener;
 
   Paddle player1;
   Paddle player2;
+  Sensor goal1;
+  Sensor goal2;
   Puck puck;
   ArrayList walls;
 
@@ -56,6 +61,7 @@ public class GameScreen implements Screen {
 
     world = new World(new Vector2(0, GRAVITY), true);
     debugRenderer = new Box2DDebugRenderer();
+    contactListener = new GameContactListener(world);
 
     camera = new OrthographicCamera();
     camera.setToOrtho(false, width, height);
@@ -77,6 +83,22 @@ public class GameScreen implements Screen {
 
     walls = new ArrayList();
 
+    // left goal sensor
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(thickness, 0f);
+    vertices[2] = createBoxVector(thickness, goalSize);
+    vertices[3] = createBoxVector(0f, goalSize);
+    goal1 = new Sensor(world, createBoxVector(padding, padding + endWallLength), vertices);
+
+    // right goal sensor
+    vertices = new Vector2[4];
+    vertices[0] = createBoxVector(0f, 0f);
+    vertices[1] = createBoxVector(thickness, 0f);
+    vertices[2] = createBoxVector(thickness, goalSize);
+    vertices[3] = createBoxVector(0f, goalSize);
+    goal1 = new Sensor(world, createBoxVector(width - padding - thickness, padding + endWallLength), vertices);
+
     // bottom wall
     vertices = new Vector2[4];
     vertices[0] = createBoxVector(0f, 0f);
@@ -92,6 +114,7 @@ public class GameScreen implements Screen {
     vertices[2] = createBoxVector(thickness, endWallLength);
     vertices[3] = createBoxVector(0f, endWallLength);
     walls.add(new StaticPolygon(world, createBoxVector(padding, padding), vertices));
+
 
     // bottom right wall
     vertices = new Vector2[4];

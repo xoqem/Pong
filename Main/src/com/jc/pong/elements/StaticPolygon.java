@@ -27,7 +27,7 @@ public class StaticPolygon extends Entity{
   // Methods - Entity Implementation
   //---------------------------------------------------------------------------
 
-  public FixtureDef createFixtureDef() {
+  protected FixtureDef createFixtureDef() {
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.density = 0f;
     fixtureDef.friction = 0f;
@@ -35,7 +35,7 @@ public class StaticPolygon extends Entity{
     return fixtureDef;
   }
 
-  public Shape createShape() {
+  protected Shape createShape() {
     PolygonShape polygon = new PolygonShape();
     polygon.set(vertices);
     return polygon;

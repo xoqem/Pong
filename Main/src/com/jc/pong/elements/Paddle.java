@@ -37,7 +37,7 @@ public class Paddle extends Entity {
   // Methods - Entity Implementation
   //---------------------------------------------------------------------------
 
-  public FixtureDef createFixtureDef() {
+  protected FixtureDef createFixtureDef() {
     FixtureDef fixtureDef = new FixtureDef();
     fixtureDef.density = 5.0f;
     fixtureDef.friction = 1f;
@@ -45,7 +45,7 @@ public class Paddle extends Entity {
     return fixtureDef;
   }
 
-  public Shape createShape() {
+  protected Shape createShape() {
     PolygonShape rect = new PolygonShape();
     rect.setAsBox(size.x / 2, size.y / 2);
     return rect;
