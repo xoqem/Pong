@@ -12,11 +12,9 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.jc.pong.elements.Paddle;
 import com.jc.pong.elements.Puck;
-import com.jc.pong.elements.Wall;
+import com.jc.pong.elements.StaticPolygon;
 
-import javax.swing.text.Position;
 import java.util.ArrayList;
-import java.util.Collection;
 
 public class GameScreen implements Screen {
 
@@ -70,7 +68,6 @@ public class GameScreen implements Screen {
     player1 = new Paddle(world, createBoxVector(50f, height / 2f), createBoxVector(20f, 100f));
     player2 = new Paddle(world, createBoxVector(width - 50f, height / 2f), createBoxVector(20f, 100f));
     puck = new Puck(world, createBoxVector(width / 2f, height / 2f), createBoxDistance(10f));
-    puck.getBody().setLinearVelocity(createBoxVector(200f, 200f));
 
     float padding = 10f;
     float thickness = 10f;
@@ -86,7 +83,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(width - padding * 2f, 0f);
     vertices[2] = createBoxVector(width - padding * 2f, thickness);
     vertices[3] = createBoxVector(0f, thickness);
-    walls.add(new Wall(world, createBoxVector(padding, padding), vertices));
+    walls.add(new StaticPolygon(world, createBoxVector(padding, padding), vertices));
 
     // bottom left wall
     vertices = new Vector2[4];
@@ -94,7 +91,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(thickness, 0f);
     vertices[2] = createBoxVector(thickness, endWallLength);
     vertices[3] = createBoxVector(0f, endWallLength);
-    walls.add(new Wall(world, createBoxVector(padding, padding), vertices));
+    walls.add(new StaticPolygon(world, createBoxVector(padding, padding), vertices));
 
     // bottom right wall
     vertices = new Vector2[4];
@@ -102,7 +99,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(thickness, 0f);
     vertices[2] = createBoxVector(thickness, endWallLength);
     vertices[3] = createBoxVector(0f, endWallLength);
-    walls.add(new Wall(world, createBoxVector(width - padding * 2, padding), vertices));
+    walls.add(new StaticPolygon(world, createBoxVector(width - padding * 2, padding), vertices));
 
     // top wall
     vertices = new Vector2[4];
@@ -110,7 +107,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(0f, -thickness);
     vertices[2] = createBoxVector(width - padding * 2f, -thickness);
     vertices[3] = createBoxVector(width - padding * 2f, 0f);
-    walls.add(new Wall(world, createBoxVector(padding, height - padding), vertices));
+    walls.add(new StaticPolygon(world, createBoxVector(padding, height - padding), vertices));
 
     // top left wall
     vertices = new Vector2[4];
@@ -118,7 +115,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(0f, -endWallLength);
     vertices[2] = createBoxVector(thickness, -endWallLength);
     vertices[3] = createBoxVector(thickness, 0f);
-    walls.add(new Wall(world, createBoxVector(padding, height - padding), vertices));
+    walls.add(new StaticPolygon(world, createBoxVector(padding, height - padding), vertices));
 
     // top right wall
     vertices = new Vector2[4];
@@ -126,7 +123,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(0f, -endWallLength);
     vertices[2] = createBoxVector(thickness, -endWallLength);
     vertices[3] = createBoxVector(thickness, 0f);
-    walls.add(new Wall(world, createBoxVector(width - padding * 2, height - padding), vertices));
+    walls.add(new StaticPolygon(world, createBoxVector(width - padding * 2, height - padding), vertices));
 
   }
 

@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
-public class Wall extends Entity{
+public class StaticPolygon extends Entity{
 
   //---------------------------------------------------------------------------
   // Variables - Private
@@ -16,7 +16,7 @@ public class Wall extends Entity{
   // Constructor
   //---------------------------------------------------------------------------
 
-  public Wall(World world, Vector2 position, Vector2[] vertices) {
+  public StaticPolygon(World world, Vector2 position, Vector2[] vertices) {
     super(world, position, BodyType.StaticBody);
 
     this.vertices = vertices;
