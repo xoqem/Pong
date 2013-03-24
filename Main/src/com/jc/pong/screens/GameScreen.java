@@ -90,6 +90,7 @@ public class GameScreen implements Screen {
     vertices[2] = createBoxVector(thickness, goalSize);
     vertices[3] = createBoxVector(0f, goalSize);
     goal1 = new Sensor(world, createBoxVector(padding, padding + endWallLength), vertices);
+    contactListener.addCollisionPair(goal1, puck);
 
     // right goal sensor
     vertices = new Vector2[4];
@@ -97,7 +98,8 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(thickness, 0f);
     vertices[2] = createBoxVector(thickness, goalSize);
     vertices[3] = createBoxVector(0f, goalSize);
-    goal1 = new Sensor(world, createBoxVector(width - padding - thickness, padding + endWallLength), vertices);
+    goal2 = new Sensor(world, createBoxVector(width - padding - thickness, padding + endWallLength), vertices);
+    contactListener.addCollisionPair(goal2, puck);
 
     // bottom wall
     vertices = new Vector2[4];
