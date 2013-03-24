@@ -10,15 +10,17 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.jc.pong.elements.Paddle;
-import com.jc.pong.elements.Puck;
-import com.jc.pong.elements.Sensor;
-import com.jc.pong.elements.StaticPolygon;
+import com.jc.pong.elements.*;
+import com.jc.pong.enums.GameEvent;
+import com.jc.pong.listeners.CollisionPair;
+import com.jc.pong.listeners.CollisionProcessor;
 import com.jc.pong.listeners.GameContactListener;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, CollisionProcessor {
 
   //---------------------------------------------------------------------------
   // Finals - Static - Private
@@ -40,6 +42,7 @@ public class GameScreen implements Screen {
   OrthographicCamera camera;
   ShapeRenderer shapeRenderer;
   GameContactListener contactListener;
+  Queue<GameEvent> gameEvents = new LinkedList<GameEvent>();
 
   Paddle player1;
   Paddle player2;
@@ -61,7 +64,7 @@ public class GameScreen implements Screen {
 
     world = new World(new Vector2(0, GRAVITY), true);
     debugRenderer = new Box2DDebugRenderer();
-    contactListener = new GameContactListener(world);
+    contactListener = new GameContactListener(world, this);
 
     camera = new OrthographicCamera();
     camera.setToOrtho(false, width, height);
@@ -241,6 +244,31 @@ public class GameScreen implements Screen {
     }
 
     world.step(delta, 6, 2);
+
+    while (!gameEvents.isEmpty()) {
+      switch (gameEvents.remove()) {
+        case PLAYER1_SCORED:
+          puck.reset();
+          break;
+
+        case PLAYER2_SCORED:
+          puck.reset();
+          break;
+      }
+    }
+  }
+
+  //---------------------------------------------------------------------------
+  // Methods - CollisionProcessor Implementation
+  //---------------------------------------------------------------------------
+
+  public void processCollision(CollisionPair collisionPair)
+  {
+    if (collisionPair.targetEntity == goal1) {
+      gameEvents.add(GameEvent.PLAYER2_SCORED);
+    } else if (collisionPair.targetEntity == goal2) {
+      gameEvents.add(GameEvent.PLAYER1_SCORED);
+    }
   }
 
   //---------------------------------------------------------------------------
@@ -250,7 +278,6 @@ public class GameScreen implements Screen {
   private Vector2 createBoxVector(float x, float y) {
     return new Vector2(x, y).mul(WORLD_TO_BOX);
   }
-
 
   private float createBoxDistance(float dist) {
     return dist * WORLD_TO_BOX;

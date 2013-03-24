@@ -13,12 +13,14 @@ public class GameContactListener implements ContactListener{
   //---------------------------------------------------------------------------
 
   Map<Body, CollisionPair> collisionMap = new HashMap<Body, CollisionPair>();
+  CollisionProcessor collisionProcessor;
 
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
-  public GameContactListener(World world) {
+  public GameContactListener(World world, CollisionProcessor collisionProcessor) {
+    this.collisionProcessor = collisionProcessor;
     world.setContactListener(this);
   }
 
@@ -65,7 +67,7 @@ public class GameContactListener implements ContactListener{
     if (collisionMap.containsKey(targetBody)) {
       CollisionPair collisionPair = collisionMap.get(targetBody);
       if(collisionPair.contactingEntity.getBody() == contactingBody) {
-        collisionPair.processCollision();
+        collisionProcessor.processCollision(collisionPair);
       }
     }
   }

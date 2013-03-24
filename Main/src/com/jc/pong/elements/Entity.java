@@ -1,5 +1,6 @@
 package com.jc.pong.elements;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -50,7 +51,9 @@ public abstract class Entity {
     if (body != null) {
       body.setLinearVelocity(0, 0);
       body.setAngularVelocity(0);
+      Gdx.app.log("Entity", "reset 1");
       body.setTransform(initialPosition, 0);
+      Gdx.app.log("Entity", "reset 2");
     }
   }
 
