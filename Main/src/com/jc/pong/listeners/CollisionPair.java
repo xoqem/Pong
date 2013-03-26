@@ -10,15 +10,15 @@ public class CollisionPair {
 
   public Entity targetEntity;
   public Entity contactingEntity;
-  public CollisionProcessor collisionProcessor;
+  public CallbackFunction callbackFunction;
 
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
-  public CollisionPair(Entity targetEntity, Entity contactingEntity, CollisionProcessor collisionProcessor) {
+  public CollisionPair(Entity targetEntity, Entity contactingEntity, CallbackFunction callbackFunction) {
     this.targetEntity = targetEntity;
     this.contactingEntity = contactingEntity;
-    this.collisionProcessor = collisionProcessor;
+    this.callbackFunction = callbackFunction;
   }
 }

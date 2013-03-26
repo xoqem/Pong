@@ -26,8 +26,8 @@ public class GameContactListener implements ContactListener{
   // Methods - Public
   //---------------------------------------------------------------------------
 
-  public void addCollisionPair(Entity targetEntity, Entity contactingEntity, CollisionProcessor collisionProcessor) {
-    collisionMap.put(targetEntity.getBody(), new CollisionPair(targetEntity, contactingEntity, collisionProcessor));
+  public void addCollisionPair(Entity targetEntity, Entity contactingEntity, CallbackFunction callbackFunction) {
+    collisionMap.put(targetEntity.getBody(), new CollisionPair(targetEntity, contactingEntity, callbackFunction));
   }
 
   //---------------------------------------------------------------------------
@@ -65,7 +65,7 @@ public class GameContactListener implements ContactListener{
     if (collisionMap.containsKey(targetBody)) {
       CollisionPair collisionPair = collisionMap.get(targetBody);
       if(collisionPair.contactingEntity.getBody() == contactingBody) {
-        collisionPair.collisionProcessor.processCollision(collisionPair);
+        collisionPair.callbackFunction.execute();
       }
     }
   }

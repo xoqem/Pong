@@ -12,8 +12,8 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.jc.pong.elements.*;
 import com.jc.pong.enums.GameEvent;
+import com.jc.pong.listeners.CallbackFunction;
 import com.jc.pong.listeners.CollisionPair;
-import com.jc.pong.listeners.CollisionProcessor;
 import com.jc.pong.listeners.GameContactListener;
 
 import java.util.ArrayList;
@@ -93,9 +93,9 @@ public class GameScreen implements Screen {
     vertices[2] = createBoxVector(thickness, goalSize);
     vertices[3] = createBoxVector(0f, goalSize);
     goal1 = new Sensor(world, createBoxVector(padding, padding + endWallLength), vertices);
-    contactListener.addCollisionPair(goal1, puck, new CollisionProcessor() {
+    contactListener.addCollisionPair(goal1, puck, new CallbackFunction() {
       @Override
-      public void processCollision(CollisionPair collisionPair) {
+      public void execute() {
         gameEvents.add(GameEvent.PLAYER2_SCORED);
       }
     });
@@ -107,9 +107,9 @@ public class GameScreen implements Screen {
     vertices[2] = createBoxVector(thickness, goalSize);
     vertices[3] = createBoxVector(0f, goalSize);
     goal2 = new Sensor(world, createBoxVector(width - padding - thickness, padding + endWallLength), vertices);
-    contactListener.addCollisionPair(goal2, puck, new CollisionProcessor() {
+    contactListener.addCollisionPair(goal2, puck, new CallbackFunction() {
       @Override
-      public void processCollision(CollisionPair collisionPair) {
+      public void execute() {
         gameEvents.add(GameEvent.PLAYER1_SCORED);
       }
     });
