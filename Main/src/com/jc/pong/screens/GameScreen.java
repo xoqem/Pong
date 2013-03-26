@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.jc.pong.elements.*;
 import com.jc.pong.enums.GameEvent;
 import com.jc.pong.listeners.CallbackFunction;
-import com.jc.pong.listeners.CollisionPair;
 import com.jc.pong.listeners.GameContactListener;
 
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ public class GameScreen implements Screen {
   OrthographicCamera camera;
   ShapeRenderer shapeRenderer;
   GameContactListener contactListener;
-  Queue<GameEvent> gameEvents = new LinkedList<GameEvent>();
+  Queue<CallbackFunction> gameUpdateCallbacks = new LinkedList<CallbackFunction>();
 
   Paddle player1;
   Paddle player2;
@@ -53,6 +52,9 @@ public class GameScreen implements Screen {
 
   float width;
   float height;
+
+  int score1 = 0;
+  int score2 = 0;
 
   //---------------------------------------------------------------------------
   // Constructor
@@ -94,9 +96,13 @@ public class GameScreen implements Screen {
     vertices[3] = createBoxVector(0f, goalSize);
     goal1 = new Sensor(world, createBoxVector(padding, padding + endWallLength), vertices);
     contactListener.addCollisionPair(goal1, puck, new CallbackFunction() {
-      @Override
       public void execute() {
-        gameEvents.add(GameEvent.PLAYER2_SCORED);
+        gameUpdateCallbacks.add(new CallbackFunction() {
+          public void execute() {
+            score2++;
+            puck.reset();
+          }
+        });
       }
     });
 
@@ -108,9 +114,13 @@ public class GameScreen implements Screen {
     vertices[3] = createBoxVector(0f, goalSize);
     goal2 = new Sensor(world, createBoxVector(width - padding - thickness, padding + endWallLength), vertices);
     contactListener.addCollisionPair(goal2, puck, new CallbackFunction() {
-      @Override
       public void execute() {
-        gameEvents.add(GameEvent.PLAYER1_SCORED);
+        gameUpdateCallbacks.add(new CallbackFunction() {
+          public void execute() {
+            score1++;
+            puck.reset();
+          }
+        });
       }
     });
 
@@ -216,6 +226,9 @@ public class GameScreen implements Screen {
     player1.reset();
     player2.reset();
     puck.reset();
+
+    score1 = 0;
+    score2 = 0;
   }
 
   public void update(float delta) {
@@ -255,16 +268,8 @@ public class GameScreen implements Screen {
 
     world.step(delta, 6, 2);
 
-    while (!gameEvents.isEmpty()) {
-      switch (gameEvents.remove()) {
-        case PLAYER1_SCORED:
-          puck.reset();
-          break;
-
-        case PLAYER2_SCORED:
-          puck.reset();
-          break;
-      }
+    while (!gameUpdateCallbacks.isEmpty()) {
+      gameUpdateCallbacks.remove().execute();
     }
   }
 
