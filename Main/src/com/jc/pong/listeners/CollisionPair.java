@@ -10,13 +10,15 @@ public class CollisionPair {
 
   public Entity targetEntity;
   public Entity contactingEntity;
+  public CollisionProcessor collisionProcessor;
 
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
-  public CollisionPair(Entity targetEntity, Entity contactingEntity) {
+  public CollisionPair(Entity targetEntity, Entity contactingEntity, CollisionProcessor collisionProcessor) {
     this.targetEntity = targetEntity;
     this.contactingEntity = contactingEntity;
+    this.collisionProcessor = collisionProcessor;
   }
 }

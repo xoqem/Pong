@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class GameScreen implements Screen, CollisionProcessor {
+public class GameScreen implements Screen {
 
   //---------------------------------------------------------------------------
   // Finals - Static - Private
@@ -64,7 +64,7 @@ public class GameScreen implements Screen, CollisionProcessor {
 
     world = new World(new Vector2(0, GRAVITY), true);
     debugRenderer = new Box2DDebugRenderer();
-    contactListener = new GameContactListener(world, this);
+    contactListener = new GameContactListener(world);
 
     camera = new OrthographicCamera();
     camera.setToOrtho(false, width, height);
@@ -93,7 +93,12 @@ public class GameScreen implements Screen, CollisionProcessor {
     vertices[2] = createBoxVector(thickness, goalSize);
     vertices[3] = createBoxVector(0f, goalSize);
     goal1 = new Sensor(world, createBoxVector(padding, padding + endWallLength), vertices);
-    contactListener.addCollisionPair(goal1, puck);
+    contactListener.addCollisionPair(goal1, puck, new CollisionProcessor() {
+      @Override
+      public void processCollision(CollisionPair collisionPair) {
+        gameEvents.add(GameEvent.PLAYER2_SCORED);
+      }
+    });
 
     // right goal sensor
     vertices = new Vector2[4];
@@ -102,7 +107,12 @@ public class GameScreen implements Screen, CollisionProcessor {
     vertices[2] = createBoxVector(thickness, goalSize);
     vertices[3] = createBoxVector(0f, goalSize);
     goal2 = new Sensor(world, createBoxVector(width - padding - thickness, padding + endWallLength), vertices);
-    contactListener.addCollisionPair(goal2, puck);
+    contactListener.addCollisionPair(goal2, puck, new CollisionProcessor() {
+      @Override
+      public void processCollision(CollisionPair collisionPair) {
+        gameEvents.add(GameEvent.PLAYER1_SCORED);
+      }
+    });
 
     // bottom wall
     vertices = new Vector2[4];
@@ -255,19 +265,6 @@ public class GameScreen implements Screen, CollisionProcessor {
           puck.reset();
           break;
       }
-    }
-  }
-
-  //---------------------------------------------------------------------------
-  // Methods - CollisionProcessor Implementation
-  //---------------------------------------------------------------------------
-
-  public void processCollision(CollisionPair collisionPair)
-  {
-    if (collisionPair.targetEntity == goal1) {
-      gameEvents.add(GameEvent.PLAYER2_SCORED);
-    } else if (collisionPair.targetEntity == goal2) {
-      gameEvents.add(GameEvent.PLAYER1_SCORED);
     }
   }
 

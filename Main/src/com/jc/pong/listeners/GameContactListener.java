@@ -13,14 +13,12 @@ public class GameContactListener implements ContactListener{
   //---------------------------------------------------------------------------
 
   Map<Body, CollisionPair> collisionMap = new HashMap<Body, CollisionPair>();
-  CollisionProcessor collisionProcessor;
 
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
 
-  public GameContactListener(World world, CollisionProcessor collisionProcessor) {
-    this.collisionProcessor = collisionProcessor;
+  public GameContactListener(World world) {
     world.setContactListener(this);
   }
 
@@ -28,8 +26,8 @@ public class GameContactListener implements ContactListener{
   // Methods - Public
   //---------------------------------------------------------------------------
 
-  public void addCollisionPair(Entity targetEntity, Entity contactingEntity) {
-    collisionMap.put(targetEntity.getBody(), new CollisionPair(targetEntity, contactingEntity));
+  public void addCollisionPair(Entity targetEntity, Entity contactingEntity, CollisionProcessor collisionProcessor) {
+    collisionMap.put(targetEntity.getBody(), new CollisionPair(targetEntity, contactingEntity, collisionProcessor));
   }
 
   //---------------------------------------------------------------------------
@@ -67,7 +65,7 @@ public class GameContactListener implements ContactListener{
     if (collisionMap.containsKey(targetBody)) {
       CollisionPair collisionPair = collisionMap.get(targetBody);
       if(collisionPair.contactingEntity.getBody() == contactingBody) {
-        collisionProcessor.processCollision(collisionPair);
+        collisionPair.collisionProcessor.processCollision(collisionPair);
       }
     }
   }
