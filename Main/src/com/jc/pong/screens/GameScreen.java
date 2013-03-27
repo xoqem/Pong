@@ -55,6 +55,8 @@ public class GameScreen implements Screen {
   int score1 = 0;
   int score2 = 0;
 
+  boolean debug = false;
+
   //---------------------------------------------------------------------------
   // Constructor
   //---------------------------------------------------------------------------
@@ -221,12 +223,14 @@ public class GameScreen implements Screen {
 
     camera.update();
 
-    //debugRenderer.render(world, box2WorldMatrix);
-
-    shapeRenderer.setProjectionMatrix(box2WorldMatrix);
-    int i = 0;
-    for (Entity entity : entities) {
-      entity.render(shapeRenderer);
+    if (debug) {
+      debugRenderer.render(world, box2WorldMatrix);
+    } else {
+      shapeRenderer.setProjectionMatrix(box2WorldMatrix);
+      int i = 0;
+      for (Entity entity : entities) {
+        entity.render(shapeRenderer);
+      }
     }
   }
 
@@ -242,6 +246,8 @@ public class GameScreen implements Screen {
   public void update(float delta) {
     float paddleSpeed = 500f;
 
+    // TODO: use a proper InputProcessor and move the key checks out of update
+    
     Vector2 paddleVelocity = new Vector2(0f, 0f);
     if (Gdx.input.isKeyPressed(Keys.W)) {
       paddleVelocity.y = createBoxDistance(paddleSpeed);
@@ -272,6 +278,10 @@ public class GameScreen implements Screen {
 
     if (Gdx.input.isKeyPressed(Keys.R)) {
       reset();
+    }
+
+    if (Gdx.input.isKeyPressed(Keys.Z)) {
+      debug = !debug;
     }
 
     world.step(delta, 6, 2);
