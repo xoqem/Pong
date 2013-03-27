@@ -1,5 +1,7 @@
 package com.jc.pong.elements;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -21,6 +23,18 @@ public class Puck extends Entity {
 
     this.radius = radius;
     createBody();
+  }
+
+  //---------------------------------------------------------------------------
+  // Methods - Public - Overrides
+  //---------------------------------------------------------------------------
+
+  @Override
+  public void render(ShapeRenderer shapeRenderer) {
+    Vector2 position = body.getPosition();
+    shapeRenderer.begin(ShapeType.FilledCircle);
+    shapeRenderer.filledCircle(position.x, position.y, radius, 20);
+    shapeRenderer.end();
   }
 
   //---------------------------------------------------------------------------

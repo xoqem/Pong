@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
 
   World world;
   Box2DDebugRenderer debugRenderer;
-  Matrix4 debugMatrix;
+  Matrix4 box2WorldMatrix;
 
   OrthographicCamera camera;
   ShapeRenderer shapeRenderer;
@@ -47,7 +47,7 @@ public class GameScreen implements Screen {
   Sensor goal1;
   Sensor goal2;
   Puck puck;
-  ArrayList walls;
+  ArrayList<Entity> entities = new ArrayList<Entity>();
 
   float width;
   float height;
@@ -70,22 +70,25 @@ public class GameScreen implements Screen {
     camera = new OrthographicCamera();
     camera.setToOrtho(false, width, height);
 
-    debugMatrix = new Matrix4(camera.combined);
-    debugMatrix.scale(BOX_TO_WORLD, BOX_TO_WORLD, 1f);
+    box2WorldMatrix = new Matrix4(camera.combined);
+    box2WorldMatrix.scale(BOX_TO_WORLD, BOX_TO_WORLD, 1f);
 
     shapeRenderer = new ShapeRenderer();
 
     player1 = new Paddle(world, createBoxVector(50f, height / 2f), createBoxVector(20f, 100f));
+    entities.add(player1);
+
     player2 = new Paddle(world, createBoxVector(width - 50f, height / 2f), createBoxVector(20f, 100f));
+    entities.add(player2);
+
     puck = new Puck(world, createBoxVector(width / 2f, height / 2f), createBoxDistance(10f));
+    entities.add(puck);
 
     float padding = 10f;
     float thickness = 10f;
     float goalSize = 200f;
     float endWallLength = (height - goalSize - padding - thickness) / 2;
     Vector2[] vertices;
-
-    walls = new ArrayList();
 
     // left goal sensor
     vertices = new Vector2[4];
@@ -129,7 +132,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(width - padding * 2f, 0f);
     vertices[2] = createBoxVector(width - padding * 2f, thickness);
     vertices[3] = createBoxVector(0f, thickness);
-    walls.add(new StaticPolygon(world, createBoxVector(padding, padding), vertices));
+    entities.add(new StaticPolygon(world, createBoxVector(padding, padding), vertices));
 
     // bottom left wall
     vertices = new Vector2[4];
@@ -137,7 +140,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(thickness, 0f);
     vertices[2] = createBoxVector(thickness, endWallLength);
     vertices[3] = createBoxVector(0f, endWallLength);
-    walls.add(new StaticPolygon(world, createBoxVector(padding, padding), vertices));
+    entities.add(new StaticPolygon(world, createBoxVector(padding, padding), vertices));
 
 
     // bottom right wall
@@ -146,7 +149,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(thickness, 0f);
     vertices[2] = createBoxVector(thickness, endWallLength);
     vertices[3] = createBoxVector(0f, endWallLength);
-    walls.add(new StaticPolygon(world, createBoxVector(width - padding * 2, padding), vertices));
+    entities.add(new StaticPolygon(world, createBoxVector(width - padding * 2, padding), vertices));
 
     // top wall
     vertices = new Vector2[4];
@@ -154,7 +157,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(0f, -thickness);
     vertices[2] = createBoxVector(width - padding * 2f, -thickness);
     vertices[3] = createBoxVector(width - padding * 2f, 0f);
-    walls.add(new StaticPolygon(world, createBoxVector(padding, height - padding), vertices));
+    entities.add(new StaticPolygon(world, createBoxVector(padding, height - padding), vertices));
 
     // top left wall
     vertices = new Vector2[4];
@@ -162,7 +165,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(0f, -endWallLength);
     vertices[2] = createBoxVector(thickness, -endWallLength);
     vertices[3] = createBoxVector(thickness, 0f);
-    walls.add(new StaticPolygon(world, createBoxVector(padding, height - padding), vertices));
+    entities.add(new StaticPolygon(world, createBoxVector(padding, height - padding), vertices));
 
     // top right wall
     vertices = new Vector2[4];
@@ -170,7 +173,7 @@ public class GameScreen implements Screen {
     vertices[1] = createBoxVector(0f, -endWallLength);
     vertices[2] = createBoxVector(thickness, -endWallLength);
     vertices[3] = createBoxVector(thickness, 0f);
-    walls.add(new StaticPolygon(world, createBoxVector(width - padding * 2, height - padding), vertices));
+    entities.add(new StaticPolygon(world, createBoxVector(width - padding * 2, height - padding), vertices));
 
   }
 
@@ -218,7 +221,13 @@ public class GameScreen implements Screen {
 
     camera.update();
 
-    debugRenderer.render(world, debugMatrix);
+    //debugRenderer.render(world, box2WorldMatrix);
+
+    shapeRenderer.setProjectionMatrix(box2WorldMatrix);
+    int i = 0;
+    for (Entity entity : entities) {
+      entity.render(shapeRenderer);
+    }
   }
 
   public void reset() {
